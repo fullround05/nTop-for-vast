@@ -51,18 +51,23 @@ echo     "title": "Server Side CFD"
 echo }
 ) > exchange\input.json
 
+:: Delete the old simulation results
+del exchange\Result.vti
+
 :: Import the ssh key so the user is prompted to decrypt the key if needed
 pageant.exe key.ppk
 
-:: Copy the inputs, notebook, and simulation models to the server
-pscp.exe -P %port% input.json root@%ip%:input.json
-pscp.exe -P %port% ServerRunner.ntop root@%ip%:
-pscp.exe -P %port% exchange\Fluid.implicit root@%ip%:
-pscp.exe -P %port% exchange\Inlet.implicit root@%ip%:
-pscp.exe -P %port% exchange\Outlet.implicit root@%ip%:
+:: Use the putty gui to confirm the fingerprint. This is the best soltuion I have been able to find
+putty.exe -P %Port% root@%IP%
 
+:: Copy the inputs, notebook, and simulation models to the server
+pscp.exe -batch -P %port% exchange\input.json root@%ip%:
+pscp.exe -batch -P %port% ServerRunner.ntop root@%ip%:
+pscp.exe -batch -P %port% exchange\Fluid.implicit root@%ip%:
+pscp.exe -batch -P %port% exchange\Inlet.implicit root@%ip%:
+pscp.exe -batch -P %port% exchange\Outlet.implicit root@%ip%:
 
 :: SSH to the server and run the flow analysis
 plink.exe -P %Port% root@%IP% "ntopcl --username %ntopUname% --password %ntopPasswd% -v2 -j input.json ServerRunner.ntop"
 
-pscp.exe -P %port% root@%ip%:Result.vti exchange\Result.vti
+pscp.exe -batch -P %port% root@%ip%:Result.vti exchange\Result.vti
