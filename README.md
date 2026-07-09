@@ -1,4 +1,4 @@
-# nTop-for-vast
+# nTop Fluids on Your GPU Server
 Run nTop Flow Analysis and Aircraft Flow Analysis blocks on an ssh server, directly integrated into nTop!
 
 ## How it Works
