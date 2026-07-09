@@ -1,21 +1,28 @@
 :: Configuration
-set IP=%1
-set Port=%2
+set "IP=%~1"
+set "Port=%~2"
 
-set ntopUname=%3
-set ntopPasswd=%4
+set "ntopUname=%~3"
+set "ntopPasswd=%~4"
 
-set Viscocity=%5
-set Density=%6
+set "keyImported=%~5"
+set "knownServer=%~6"
+
+set "Viscocity=%~7"
+set "Density=%~8"
 
 :: This is not a problem when running from the command prompt,
 :: but the nTop run command block does not seem to like the format [x,y,z].
 :: The notebook exports the vector as x_y_z and we convert it to [x,y,z] here
-set Velocity=%7
+set "Velocity=%~9"
 set "Velocity=[%Velocity:_=,%]"
 
-set Pressure=%8
-set CellSize=%9
+:: Shift twice to move arguments 10 and 11 back to 8 and 9
+shift
+shift
+
+set "Pressure=%~8"
+set "CellSize=%~9"
 
 
 :: Change working directory to the folder this script is located in
@@ -70,10 +77,10 @@ echo }
 del exchange\Result.vti
 
 :: Import the ssh key so the user is prompted to decrypt the key if needed
-pageant.exe key.ppk
+if "%keyImported%"=="0" pageant.exe key.ppk
 
 :: Use the putty gui to confirm the fingerprint. This is the best soltuion I have been able to find
-putty.exe -P %Port% root@%IP%
+if "%knownServer%"=="0" putty.exe -P %Port% root@%IP%
 
 :: Copy the inputs, notebook, and simulation models to the server
 pscp.exe -batch -P %port% exchange\input.json root@%ip%:
