@@ -1,2 +1,7 @@
-pipeline/exchange
+pipeline/exchange/Fluid.implicit
+pipeline/exchange/Inlet.implicit
+pipeline/exchange/Outlet.implicit
+pipeline/exchange/Body.implicit
+pipeline/exchange/input.json
+pipeline/exchange/Result.vti
 pipeline/key.ppk
